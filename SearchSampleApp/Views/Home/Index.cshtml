@@ -1,0 +1,88 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+@section styles {
+    <style>
+        #loading {
+            color: red;
+        }
+    </style>
+}
+
+@section scripts {
+    <script>
+        function executeSearch(pageNumber) {
+            $.ajax({
+                url: "/Search/Execute",
+                type: "POST",
+                dataType: "text",
+                beforeSend: function () {
+                    $("#loading").show();
+                },
+                data: {
+                    Name: $("#name").val(),
+                    Total: $("#total").val(),
+                    Date: $("#date").val(),
+                    Status: $("#status").val(),
+                    PageNumber: pageNumber,
+                    PageSize: 4
+                },
+                success: function (data) {
+                    $("#results").html(data);
+                },
+                error: function (jqxhr, textStatus, errorThrown) {
+                    if (jqxhr != null) {
+                        console.log(jqxhr.responseText, textStatus, errorThrown);
+                        alert(jqxhr.responseText);
+                    }
+                },
+                complete: function () {
+                    $("#loading").hide();
+                }
+            });
+
+        }
+
+        $("#search").click(function () {
+            executeSearch();
+        });
+
+        $(document).ready(function () {
+            executeSearch();
+        });
+    </script>
+}
+
+<div class="row">
+    <div class="col-md-2">
+        <h2>Filters</h2>
+        <form role="form">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" class="form-control" id="name" name="name">
+            </div>
+            <div class="form-group">
+                <label for="date">Date:</label>
+                <input type="date" class="form-control" id="date" name="Date">
+            </div>
+            <div class="form-group">
+                <label for="total">Total:</label>
+                <input type="number" class="form-control" id="total" name="total">
+            </div>
+            <div class="form-group">
+                <label for="status">Status:</label>
+                <input type="text" class="form-control" id="status" name="status">
+            </div>
+            <div class="form-group">
+                <input type="button" value="Search" id="search" />
+            </div>
+        </form>
+    </div>
+    <div class="col-md-8">
+        <h2>Results<span id="loading"> - Loading...</span></h2>
+        <div id="results">
+
+        </div>
+    </div>
+</div>

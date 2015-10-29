@@ -1,0 +1,20 @@
+﻿@using SearchSampleApp.Domain
+@using PagedList.Mvc;
+@model PagedList.IPagedList<Order>
+
+@foreach (var order in Model)
+{
+    <div class="row">
+        <div class="col-md-12">
+            <b>
+                Customer Name: @order.Customer.Name
+            </b><br />
+            Order #: @order.Id <br />
+            Date: @order.Date <br />
+            Total: @order.Total <br />
+            Status: @order.Status <br />
+    </div>
+</div>
+}
+
+@Html.PagedListPager(Model, page => string.Format("javascript:executeSearch({0})", page))
